@@ -22,6 +22,8 @@ string Token::name() {
             return "LBRACK";
         case T_RBRACK:
             return "RBRACK";
+        case T_EQUALS:
+            return "EQUALS";
         default:
             return "n/a";
     }
@@ -89,6 +91,9 @@ Token ListLexer::nextToken() {
             case ']':
                 consume();
                 return Token(T_RBRACK, string(1,c));
+            case '=':
+                consume();
+                return Token(T_EQUALS, string(1,c));
             case ',':
                 consume();
                 return Token(T_COMMA, string(1,c));

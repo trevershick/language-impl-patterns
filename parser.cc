@@ -4,11 +4,20 @@
 #include "lexer.h"
 #include "parser.h"
 
-void Parser::consume() {
+
+void LA1Parser::consume() {
     lookahead = this->input->nextToken();
 }
 
-void Parser::match(int tokenType) {
+int LA1Parser::LT() {
+    return lookahead.type();
+}
+
+Token LA1Parser::LA() {
+    return lookahead;
+}
+
+void LA1Parser::match(int tokenType) {
     if (lookahead.type() == tokenType) {
         consume();
     } else {
@@ -19,20 +28,20 @@ void Parser::match(int tokenType) {
 }
 
 void ListParser::element() {
-    if (lookahead.type() == T_NAME) {
+    if (LT() == T_NAME) {
         match(T_NAME);
-    } else if (lookahead.type() == T_LBRACK) {
+    } else if (LT() == T_LBRACK) {
         list();
     } else {
         ostringstream os;
-        os << "Expecting name or list, found " << lookahead.str();
+        os << "Expecting name or list, found " << LA().str();
         throw runtime_error(os.str());
     }
 }
 
 void ListParser::elements() {
     element();
-    while (lookahead.type() == T_COMMA) {
+    while (LT() == T_COMMA) {
         match(T_COMMA);
         element();
     }

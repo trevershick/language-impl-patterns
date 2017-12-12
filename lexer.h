@@ -8,16 +8,20 @@
 #define T_COMMA 3
 #define T_LBRACK 4
 #define T_RBRACK 5
+#define T_EQUALS 6
 
 using namespace std;
 
 class Token {
     public:
+        Token() : _type(0), _text("INVALID") {};
         Token(int type, string text) : _type(type), _text(text) {};
-        string name();
+        virtual ~Token() {};
+
         int type() { return _type; }
+        string name();
         string str();
-        virtual string text() { return _text; }
+        string text() { return _text; }
     private:
         int _type;
         string _text;

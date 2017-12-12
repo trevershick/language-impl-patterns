@@ -6,19 +6,31 @@
 
 class Parser {
     public:
-        Parser(Lexer* lexer) : input(lexer), lookahead(lexer->nextToken()) {};
+        Parser(Lexer* lexer) : input(lexer) {};
         virtual ~Parser() {};
-    private:
-        Lexer* input;
     protected:
-        Token lookahead;
-        void match(int type);
-        void consume();
+        Lexer* input;
+        virtual void match(int type) = 0;
+        virtual void consume() = 0;
+        virtual int LT() = 0;
+        virtual Token LA() = 0;
 };
 
-class ListParser : public Parser {
+class LA1Parser : public Parser {
     public:
-        ListParser(ListLexer* ll) : Parser(ll) {};
+        LA1Parser(Lexer* lexer) : Parser(lexer), lookahead(lexer->nextToken()) {};
+        virtual ~LA1Parser() {};
+    protected:
+        Token lookahead;
+        virtual void consume();
+        virtual void match(int type);
+        virtual int LT();
+        virtual Token LA();
+};
+
+class ListParser : public LA1Parser {
+    public:
+        ListParser(ListLexer* ll) : LA1Parser(ll) {};
         virtual ~ListParser() {};
         void run();
     private:
