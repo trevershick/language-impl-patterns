@@ -18,7 +18,7 @@ class Token {
         Token() : _type(0), _text("INVALID") {};
         Token(int type, string text) : _type(type), _text(text) {};
         Token(const Token& p);
-        virtual ~Token() {};
+        virtual ~Token();
 
         int type() { return _type; }
         string name();
@@ -39,7 +39,7 @@ class Lexer {
         // verify the next char is 'c' and consume it.
         void match(char c);
 
-        virtual Token nextToken() = 0;
+        virtual Token* nextTokenp() = 0;
 
     private:
         string input;
@@ -51,10 +51,11 @@ class Lexer {
 class ListLexer : public Lexer {
     public:
         ListLexer(string in);
-        virtual Token nextToken();
+        virtual Token* nextTokenp();
     private:
         bool isLETTER();
         Token NAME();
+        Token* NAMEp();
 };
 
 #endif

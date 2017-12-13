@@ -1,8 +1,6 @@
 #include <vector>
 #include <cstdlib>
-#if DEBUG
 #include <iostream>
-#endif
 #include <sstream>
 
 #include "lexer.h"
@@ -19,24 +17,33 @@ void showTokens(deque<Token>& t) {
 #endif
 LAParser::LAParser(Lexer* lexer, int lookahead) : Parser(lexer) {
     // fill up the deque
-    for (int i=0;i < lookahead; i++) tokens.push_back(input->nextToken());
+    for (int i=0;i < lookahead; i++) tokens.push_back(input->nextTokenp());
 }
 
-Token LAParser::LA(int i) {
+Token* LAParser::LA(int i) {
     return tokens.at(i-1);
 }
 
 int LAParser::LT(int i) {
-    return LA(i).type();
+//    cout << "LT" << endl;
+    const Token* p = LA(i);
+//    cout << "LT2" << endl;
+    return ((Token*) p)->type();
 }
 
 void LAParser::consume() {
+    // the tokens returns from the lexer are created on the heap, then
+    // we put them in the deque.  when we pop them off we need to delete
+    // them because the lexer won't
+    Token* to_delete = tokens.front();
+
     tokens.pop_front();
-    tokens.push_back(input->nextToken());
+    tokens.push_back(input->nextTokenp());
 #if DEBUG
     cout << "Look Ahead -> " ;
     showTokens(tokens);
 #endif
+    delete to_delete;
 }
 
 LAParser::~LAParser() {

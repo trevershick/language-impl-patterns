@@ -1,12 +1,16 @@
 #include "lexer.h"
 #include <stdexcept>
-#include <iostream>
+#include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 Token::Token(const Token& p) {
     _type = p._type;
     _text = p._text;
     cout << "Token " << name() << " was copied." << endl;
+}
+Token::~Token() {
+    cout << "Token Dtor" << endl;
 }
 
 string Token::str() {
@@ -71,6 +75,15 @@ bool ListLexer::isLETTER() {
     return (c >='a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
+Token* ListLexer::NAMEp() {
+    ostringstream buffer;
+    do {
+        buffer << la();
+        consume();
+    } while (isLETTER());
+    return new Token(T_NAME, buffer.str());
+}
+
 Token ListLexer::NAME() {
     ostringstream buffer;
     do {
@@ -80,7 +93,7 @@ Token ListLexer::NAME() {
     return Token(T_NAME, buffer.str());
 }
 
-Token ListLexer::nextToken() {
+Token* ListLexer::nextTokenp() {
     char c;
     while ((c=la()) != T_EOF) {
         switch (c) {
@@ -92,19 +105,19 @@ Token ListLexer::nextToken() {
                 continue;
             case '[':
                 consume();
-                return Token(T_LBRACK, string(1,c));
+                return new Token(T_LBRACK, string(1,c));
             case ']':
                 consume();
-                return Token(T_RBRACK, string(1,c));
+                return new Token(T_RBRACK, string(1,c));
             case '=':
                 consume();
-                return Token(T_EQUALS, string(1,c));
+                return new Token(T_EQUALS, string(1,c));
             case ',':
                 consume();
-                return Token(T_COMMA, string(1,c));
+                return new Token(T_COMMA, string(1,c));
             default:
                 if (isLETTER()) {
-                    return NAME();
+                    return NAMEp();
                 } else {
                     ostringstream os;
                     os << "Invalid Character '" << c << "'";
@@ -112,5 +125,6 @@ Token ListLexer::nextToken() {
                 }
         }
     }
-    return Token(T_EOF, "<EOF>");
+    return new Token(T_EOF, "<EOF>");
 }
+

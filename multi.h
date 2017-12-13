@@ -9,15 +9,15 @@ class LAParser : public Parser {
     public:
         LAParser(Lexer* lexer, int lookahead);
         ~LAParser();
-        Token LA(int i);
+        Token* LA(int i);
         int LT(int i);
     private:
-        deque<Token> tokens;
+        deque<Token*> tokens;
     protected:
         virtual void consume();
         virtual void match(int type);
         virtual int LT() { return LT(1); }
-        virtual Token LA() { return LA(1); }
+        virtual Token* LA() { return LA(1); }
 };
 
 class ListLAParser : public LAParser {
