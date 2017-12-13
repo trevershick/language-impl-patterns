@@ -5,11 +5,13 @@
 TEST(ParserTest, Assignments) {
    ListLexer ll("[a,[a, [b=c]]]");
    ListLAParser lp(&ll,2);
+   lp.run();
 }
 
 TEST(ParserTest, NestedLists) {
    ListLexer ll("[a,[a, [b]]]");
    ListLAParser lp(&ll,2);
+   lp.run();
 }
 
 TEST(ParserTest, FailureThrowsException) {

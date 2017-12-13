@@ -1,8 +1,13 @@
 #include "lexer.h"
 #include <stdexcept>
+#include <iostream>
 #include <sstream>
 
-
+Token::Token(const Token& p) {
+    _type = p._type;
+    _text = p._text;
+    cout << "Token " << name() << " was copied." << endl;
+}
 
 string Token::str() {
     ostringstream os;

@@ -12,9 +12,7 @@ class LAParser : public Parser {
         Token LA(int i);
         int LT(int i);
     private:
-        int la;
-        int idx;
-        Token* tokens;
+        deque<Token> tokens;
     protected:
         virtual void consume();
         virtual void match(int type);

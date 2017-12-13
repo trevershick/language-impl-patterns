@@ -3,6 +3,7 @@
 
 #include <string>
 
+#define DEBUG 0
 #define T_EOF -1
 #define T_NAME 2
 #define T_COMMA 3
@@ -16,6 +17,7 @@ class Token {
     public:
         Token() : _type(0), _text("INVALID") {};
         Token(int type, string text) : _type(type), _text(text) {};
+        Token(const Token& p);
         virtual ~Token() {};
 
         int type() { return _type; }

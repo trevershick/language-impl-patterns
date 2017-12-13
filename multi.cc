@@ -1,18 +1,29 @@
 #include <vector>
 #include <cstdlib>
+#if DEBUG
+#include <iostream>
+#endif
 #include <sstream>
 
 #include "lexer.h"
 #include "multi.h"
 
-LAParser::LAParser(Lexer* lexer, int lookahead) : Parser(lexer), la(lookahead), idx(0) {
+#if DEBUG
+void showTokens(deque<Token>& t) {
+    for(deque<Token>::iterator it = t.begin(); it != t.end(); ++it) {
+        cout << it->str();
+    }
+
+    cout << endl;
+}
+#endif
+LAParser::LAParser(Lexer* lexer, int lookahead) : Parser(lexer) {
     // fill up the deque
-    tokens = new Token[lookahead];
-    for (int i=0;i < la; i++) tokens[i] = input->nextToken();
+    for (int i=0;i < lookahead; i++) tokens.push_back(input->nextToken());
 }
 
 Token LAParser::LA(int i) {
-    return tokens[(idx+i-1) % la];
+    return tokens.at(i-1);
 }
 
 int LAParser::LT(int i) {
@@ -20,15 +31,21 @@ int LAParser::LT(int i) {
 }
 
 void LAParser::consume() {
-    tokens[idx] = input->nextToken();
-    idx = (idx + 1) % la;
+    tokens.pop_front();
+    tokens.push_back(input->nextToken());
+#if DEBUG
+    cout << "Look Ahead -> " ;
+    showTokens(tokens);
+#endif
 }
 
 LAParser::~LAParser() {
-    delete [] tokens;
 }
 
 void LAParser::match(int tokenType) {
+#if DEBUG
+    cout << "Match:" << tokenType << endl;
+#endif
     if (LT(1) == tokenType) {
         consume();
     } else {
