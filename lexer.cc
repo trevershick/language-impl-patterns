@@ -1,16 +1,21 @@
 #include "lexer.h"
 #include <stdexcept>
-#include <stdexcept>
 #include <sstream>
 #include <iostream>
+
+using namespace std;
 
 Token::Token(const Token& p) {
     _type = p._type;
     _text = p._text;
+#if DEBUG
     cout << "Token " << name() << " was copied." << endl;
+#endif
 }
 Token::~Token() {
+#if DEBUG
     cout << "Token Dtor" << endl;
+#endif
 }
 
 string Token::str() {
@@ -75,25 +80,16 @@ bool ListLexer::isLETTER() {
     return (c >='a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-Token* ListLexer::NAMEp() {
+unique_ptr<Token> ListLexer::NAMEp() {
     ostringstream buffer;
     do {
         buffer << la();
         consume();
     } while (isLETTER());
-    return new Token(T_NAME, buffer.str());
+    return unique_ptr<Token>(new Token(T_NAME, buffer.str()));
 }
 
-Token ListLexer::NAME() {
-    ostringstream buffer;
-    do {
-        buffer << la();
-        consume();
-    } while (isLETTER());
-    return Token(T_NAME, buffer.str());
-}
-
-Token* ListLexer::nextTokenp() {
+unique_ptr<Token> ListLexer::nextTokenp() {
     char c;
     while ((c=la()) != T_EOF) {
         switch (c) {
@@ -105,16 +101,16 @@ Token* ListLexer::nextTokenp() {
                 continue;
             case '[':
                 consume();
-                return new Token(T_LBRACK, string(1,c));
+                return unique_ptr<Token>(new Token(T_LBRACK, string(1,c)));
             case ']':
                 consume();
-                return new Token(T_RBRACK, string(1,c));
+                return unique_ptr<Token>(new Token(T_RBRACK, string(1,c)));
             case '=':
                 consume();
-                return new Token(T_EQUALS, string(1,c));
+                return unique_ptr<Token>(new Token(T_EQUALS, string(1,c)));
             case ',':
                 consume();
-                return new Token(T_COMMA, string(1,c));
+                return unique_ptr<Token>(new Token(T_COMMA, string(1,c)));
             default:
                 if (isLETTER()) {
                     return NAMEp();
@@ -125,6 +121,6 @@ Token* ListLexer::nextTokenp() {
                 }
         }
     }
-    return new Token(T_EOF, "<EOF>");
+    return unique_ptr<Token>(new Token(T_EOF, "<EOF>"));
 }
 

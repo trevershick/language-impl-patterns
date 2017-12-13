@@ -2,6 +2,7 @@
 #define __LEXER_H
 
 #include <string>
+#include <memory>
 
 #define DEBUG 0
 #define T_EOF -1
@@ -39,7 +40,7 @@ class Lexer {
         // verify the next char is 'c' and consume it.
         void match(char c);
 
-        virtual Token* nextTokenp() = 0;
+        virtual std::unique_ptr<Token> nextTokenp() = 0;
 
     private:
         string input;
@@ -51,11 +52,10 @@ class Lexer {
 class ListLexer : public Lexer {
     public:
         ListLexer(string in);
-        virtual Token* nextTokenp();
+        virtual unique_ptr<Token> nextTokenp();
     private:
         bool isLETTER();
-        Token NAME();
-        Token* NAMEp();
+        unique_ptr<Token> NAMEp();
 };
 
 #endif

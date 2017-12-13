@@ -12,8 +12,6 @@ class Parser {
         Lexer* input;
         virtual void match(int type) = 0;
         virtual void consume() = 0;
-        virtual int LT() = 0;
-        virtual const Token* LA() = 0;
 };
 
 #endif
