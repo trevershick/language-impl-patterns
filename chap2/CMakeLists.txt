@@ -17,15 +17,11 @@ include_directories(${GTEST_INCLUDE_DIRS})
 
 enable_testing()
 
-add_executable(lexer_test lexer_test.cc)
-target_link_libraries(lexer_test lexer)
-target_link_libraries(lexer_test ${GTEST_BOTH_LIBRARIES})
+
+file(GLOB TEST_SRCS *_test.cc)
+
+add_executable(all_tests ${TEST_SRCS})
+target_link_libraries(all_tests multi lexer ${GTEST_BOTH_LIBRARIES})
 
 
-
-add_executable(multi_test multi_test.cc)
-target_link_libraries(multi_test lexer multi)
-target_link_libraries(multi_test ${GTEST_BOTH_LIBRARIES})
-
-add_test(NAME LexerTests COMMAND lexer_test)
-add_test(NAME MultiTests COMMAND multi_test)
+add_test(NAME Tests COMMAND all_tests)
