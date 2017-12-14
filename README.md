@@ -4,7 +4,9 @@
 
 ```
 cd chap2
-cmake .
+mkdir build
+cd build
+cmake ..
 make
-./multi_test
+make test
 ```
