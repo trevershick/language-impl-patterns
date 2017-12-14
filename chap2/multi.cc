@@ -18,12 +18,11 @@ LAParser::LAParser(Lexer *lexer, int lookahead) : Parser(lexer) {
     tokens.push_back(input->nextToken());
 }
 
-Token &LAParser::LA(int i) {
-  // i don't really like using this deref operator like this.
-  return *tokens.at(i - 1).get();
+shared_ptr<Token> LAParser::LA(int i) {
+  return tokens.at(i - 1);
 }
 
-int LAParser::LT(int i) { return LA(i).type(); }
+int LAParser::LT(int i) { return LA(i)->type(); }
 
 void LAParser::consume() {
   // the tokens returns from the lexer are created on the heap, then

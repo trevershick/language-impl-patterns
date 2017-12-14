@@ -78,16 +78,16 @@ bool ListLexer::isLETTER() {
   return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
 
-unique_ptr<Token> ListLexer::NAME() {
+shared_ptr<Token> ListLexer::NAME() {
   ostringstream buffer;
   do {
     buffer << la();
     consume();
   } while (isLETTER());
-  return unique_ptr<Token>(new Token(T_NAME, buffer.str()));
+  return shared_ptr<Token>(new Token(T_NAME, buffer.str()));
 }
 
-unique_ptr<Token> ListLexer::nextToken() {
+shared_ptr<Token> ListLexer::nextToken() {
   char c;
   while ((c = la()) != T_EOF) {
     switch (c) {
@@ -99,16 +99,16 @@ unique_ptr<Token> ListLexer::nextToken() {
       continue;
     case '[':
       consume();
-      return unique_ptr<Token>(new Token(T_LBRACK, string(1, c)));
+      return shared_ptr<Token>(new Token(T_LBRACK, string(1, c)));
     case ']':
       consume();
-      return unique_ptr<Token>(new Token(T_RBRACK, string(1, c)));
+      return shared_ptr<Token>(new Token(T_RBRACK, string(1, c)));
     case '=':
       consume();
-      return unique_ptr<Token>(new Token(T_EQUALS, string(1, c)));
+      return shared_ptr<Token>(new Token(T_EQUALS, string(1, c)));
     case ',':
       consume();
-      return unique_ptr<Token>(new Token(T_COMMA, string(1, c)));
+      return shared_ptr<Token>(new Token(T_COMMA, string(1, c)));
     default:
       if (isLETTER()) {
         return NAME();
@@ -119,5 +119,5 @@ unique_ptr<Token> ListLexer::nextToken() {
       }
     }
   }
-  return unique_ptr<Token>(new Token(T_EOF, "<EOF>"));
+  return shared_ptr<Token>(new Token(T_EOF, "<EOF>"));
 }

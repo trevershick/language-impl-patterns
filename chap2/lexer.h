@@ -41,7 +41,7 @@ public:
   // verify the next char is 'c' and consume it.
   void match(char c);
 
-  virtual std::unique_ptr<Token> nextToken() = 0;
+  virtual std::shared_ptr<Token> nextToken() = 0;
 
 private:
   string input;
@@ -52,11 +52,11 @@ private:
 class ListLexer : public Lexer {
 public:
   ListLexer(string in);
-  virtual unique_ptr<Token> nextToken();
+  virtual shared_ptr<Token> nextToken();
 
 private:
   bool isLETTER();
-  unique_ptr<Token> NAME();
+  shared_ptr<Token> NAME();
 };
 
 #endif

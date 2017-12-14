@@ -11,13 +11,13 @@ public:
   ~LAParser();
 
 protected:
-  Token &LA(int i);
+  shared_ptr<Token> LA(int i);
   int LT(int i);
   virtual void consume();
   virtual void match(int type);
 
 private:
-  deque<unique_ptr<Token>> tokens;
+  deque<shared_ptr<Token>> tokens;
 };
 
 class ListLAParser : public LAParser {
